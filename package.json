@@ -1,0 +1,10 @@
+{
+  "name": "cek-coverage-dp-fixed",
+  "version": "1.0.0",
+  "description": "FTTH Coverage Checker — serverless API helpers",
+  "private": true,
+  "dependencies": {
+    "formidable": "^3.5.1",
+    "xlsx": "^0.18.5"
+  }
+}
