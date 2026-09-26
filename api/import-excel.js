@@ -24,7 +24,7 @@
 
 'use strict';
 
-const formidable = require('formidable');
+const { formidable } = require('formidable');
 const XLSX = require('xlsx');
 
 // ---------- Titik-titik DP (lat, lng) — sama persis dengan index.html ----------
@@ -114,7 +114,17 @@ async function geocodeAddress(address) {
 // ---------- Parse multipart/form-data ----------
 function parseForm(req) {
   return new Promise((resolve, reject) => {
-    const form = formidable({ maxFileSize: 20 * 1024 * 1024 }); // 20 MB
+    let form;
+    if (typeof formidable === 'function') {
+      form = formidable({ maxFileSize: 20 * 1024 * 1024 });
+    } else if (formidable && typeof formidable.formidable === 'function') {
+      form = formidable.formidable({ maxFileSize: 20 * 1024 * 1024 });
+    } else if (formidable && typeof formidable.IncomingForm === 'function') {
+      form = new formidable.IncomingForm({ maxFileSize: 20 * 1024 * 1024 });
+    } else {
+      return reject(new Error('Inisialisasi formidable gagal: tipe ' + typeof formidable));
+    }
+
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);
       resolve({ fields, files });
