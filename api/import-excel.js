@@ -10,7 +10,7 @@
 //     ok: true,
 //     summary: { total, covered, notCovered, noCoord },
 //     rows: [
-//       { nama, nomor, address, status, distance }
+//       { nama, nomor, address, link, status, distance }
 //       ...
 //     ]
 //   }
@@ -243,13 +243,13 @@ module.exports = async (req, res) => {
       const status = (row.address && String(row.address).trim())
         ? 'Alamat Tidak Ditemukan'
         : 'Tidak Ada Koordinat';
-      return { nama: row.nama, nomor: row.nomor, address: row.address, status, distance: null };
+      return { nama: row.nama, nomor: row.nomor, address: row.address, link: row.link, status, distance: null };
     }
     const dist = nearestDpDistance(row.coord.lat, row.coord.lng);
     const isCovered = dist <= radius;
     if (isCovered) covered++; else notCovered++;
     const status = (isCovered ? 'Tercover' : 'Tidak Tercover') + (row.geocoded ? ' (est. alamat)' : '');
-    return { nama: row.nama, nomor: row.nomor, address: row.address, status, distance: Math.round(dist) };
+    return { nama: row.nama, nomor: row.nomor, address: row.address, link: row.link, status, distance: Math.round(dist) };
   });
 
   // ---- 7. Kirim respons ----
